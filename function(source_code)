@@ -1,0 +1,30 @@
+FUNCTION z_calculate_exam_result.
+*"----------------------------------------------------------------------
+*"*"Local Interface:
+*"  IMPORTING
+*"     REFERENCE(I_EXAM1) TYPE  I
+*"     REFERENCE(I_EXAM2) TYPE  I
+*"  EXPORTING
+*"     REFERENCE(E_RESULT) TYPE  STRING
+*"  EXCEPTIONS
+*"      INVALID_GRADE
+*"----------------------------------------------------------------------
+
+  DATA: lv_final_grade TYPE i.
+
+  " Geçersiz not kontrolü
+  IF i_exam1 < 0 OR i_exam1 > 100 OR i_exam2 < 0 OR i_exam2 > 100.
+    RAISE invalid_grade.
+  ENDIF.
+
+  " İlk sınavın %40'ı, ikinci sınavın %60'ı alınarak toplam puan hesaplanır
+  lv_final_grade = ( i_exam1 * 40 / 100 ) + ( i_exam2 * 60 / 100 ).
+
+  " Sonuca göre geçip geçmediği belirlenir
+  IF lv_final_grade >= 50.
+    e_result = 'Geçti'.
+  ELSE.
+    e_result = 'Kaldı'.
+  ENDIF.
+
+ENDFUNCTION.
