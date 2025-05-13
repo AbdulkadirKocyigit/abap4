@@ -1,0 +1,31 @@
+REPORT zbk_egt_0012.
+
+PARAMETERS: p_exam1 TYPE i,  " İlk sınav notu
+            p_exam2 TYPE i.  " İkinci sınav notu
+
+START-OF-SELECTION.
+  DATA: lv_exam1  TYPE i,
+        lv_exam2  TYPE i,
+        lv_result TYPE string.
+
+  lv_exam1 = p_exam1.  " Kullanıcıdan alınan ilk sınav notu
+  lv_exam2 = p_exam2.  " Kullanıcıdan alınan ikinci sınav notu
+
+
+  CALL FUNCTION 'Z_CALCULATE_EXAM_RESULT'
+    EXPORTING
+      i_exam1       = lv_exam1
+      i_exam2       = lv_exam2
+    IMPORTING
+      e_result      = lv_result
+    EXCEPTIONS
+      invalid_grade = 1
+      OTHERS        = 2.
+
+  IF sy-subrc = 0.
+    WRITE: / 'İlk Sınav Sonucu: ', lv_exam1, ' İkinci Sınav Sonucu: ', lv_exam2, ' Sonuç: ', lv_result.
+  ELSEIF sy-subrc = 1.
+    WRITE: / 'Hata: Geçersiz not!'.
+  ELSE.
+    WRITE: / 'Bilinmeyen bir hata oluştu.'.
+  ENDIF.
